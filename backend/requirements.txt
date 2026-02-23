@@ -4,3 +4,4 @@ motor
 python-dotenv==1.2.1
 razorpay==2.0.0
 uvicorn==0.25.0
+pyJWT
