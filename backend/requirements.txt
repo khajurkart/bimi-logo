@@ -6,3 +6,4 @@ razorpay==2.0.0
 uvicorn==0.25.0
 pyJWT
 bcrypt
+email-validator
