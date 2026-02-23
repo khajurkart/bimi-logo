@@ -1,0 +1,28 @@
+/* KhajurKart Custom Styles */
+
+/* Remove default App centering */
+.App {
+  min-height: 100vh;
+}
+
+/* Smooth transitions for interactive elements */
+button,
+a {
+  transition: all 0.3s ease;
+}
+
+/* Image lazy loading optimization */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Product card hover effects */
+.product-card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -12px rgba(198, 169, 98, 0.2);
+}
