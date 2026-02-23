@@ -1,5 +1,6 @@
 fastapi==0.110.1
 gunicorn
+motor
 pymongo==4.5.0
 python-dotenv==1.2.1
 razorpay==2.0.0
