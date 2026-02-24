@@ -20,19 +20,25 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pathlib import Path
+from starlette.graphql import GraphQLApp  # if using GraphQL (optional)
 
 # 1️⃣ Create FastAPI app
 app = FastAPI()
 
-# 2️⃣ Serve frontend build folder
-app.mount("/", StaticFiles(directory="frontend/build", html=True), name="frontend")
+# 2️⃣ Example GraphQL endpoint
+# Only if using GraphQL
+# from your_schema import schema
+# app.add_route("/graphql", GraphQLApp(schema=schema))
 
-# 3️⃣ Example backend API
+# 3️⃣ Example REST API
 @app.get("/api/test")
 async def test_api():
     return {"message": "Backend works"}
 
-# 4️⃣ Catch-all route for React Router
+# 4️⃣ Serve frontend static files
+app.mount("/", StaticFiles(directory="frontend/build", html=True), name="frontend")
+
+# 5️⃣ Catch-all route for React Router (after APIs)
 @app.get("/{full_path:path}")
 async def catch_all(full_path: str):
     index_path = Path("frontend/build/index.html")
@@ -40,10 +46,10 @@ async def catch_all(full_path: str):
         return FileResponse(index_path)
     return {"error": "index.html not found"}
 
-# 5️⃣ Run server using Render's PORT environment variable
+# 6️⃣ Use Render's PORT environment variable
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
     import uvicorn
+    port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
     
 
