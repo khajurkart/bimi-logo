@@ -16,6 +16,12 @@ import os
 import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from pathlib import Path
+
+@app.get("/{full_path:path}")
+async def catch_all(full_path: str):
+    return FileResponse(Path("frontend/build/index.html"))
 
 app = FastAPI()
 
