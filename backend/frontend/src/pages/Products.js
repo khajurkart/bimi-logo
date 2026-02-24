@@ -1,4 +1,4 @@
-import { login, getProducts, getCategories } from "../api/api";import React, { useState, useEffect } from 'react';
+import { login, getProducts, getCategories } from "../api";import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
