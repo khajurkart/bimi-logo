@@ -45,6 +45,7 @@ app.add_middleware(
 
 # API Router
 api_router = APIRouter(prefix="/api")
+@api_router.post("/auth/login")
 security = HTTPBearer()
 
 # --------- STATIC FILES (React Build) ---------
