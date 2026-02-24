@@ -60,13 +60,28 @@ def create_access_token(data: dict) -> str:
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
-    token = credentials.credentials
-    payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-    user_id = payload.get("sub")
-    user = await db.users.find_one({"id": user_id}, {"_id": 0, "password": 0})
-    if not user:
-        raise HTTPException(status_code=401, detail="Invalid user")
-    return user
+    try:
+        token = credentials.credentials
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        user_id = payload.get("sub")
+
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Invalid token")
+
+        user = await db.users.find_one(
+            {"id": user_id}, {"_id": 0, "password": 0}
+        )
+
+        if not user:
+            raise HTTPException(status_code=401, detail="User not found")
+
+        return user
+
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
 
 # --------- MODELS ---------
 class UserRegister(BaseModel):
@@ -78,6 +93,7 @@ class UserRegister(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
 
 # --------- AUTH ROUTES ---------
 @api_router.post("/auth/register")
@@ -102,32 +118,61 @@ async def register(user: UserRegister):
 
     token = create_access_token({"sub": user_id})
 
-    return {"access_token": token, "token_type": "bearer"}
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {
+            "id": user_id,
+            "name": user.name,
+            "email": user.email,
+            "phone": user.phone
+        }
+    }
+
 
 @api_router.post("/auth/login")
 async def login(credentials: UserLogin):
     user = await db.users.find_one({"email": credentials.email})
+
     if not user or not verify_password(credentials.password, user["password"]):
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
     token = create_access_token({"sub": user["id"]})
 
-    return {"access_token": token, "token_type": "bearer"}
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {
+            "id": user["id"],
+            "name": user["name"],
+            "email": user["email"],
+            "phone": user.get("phone")
+        }
+    }
+
+
+@api_router.get("/auth/me")
+async def get_me(current_user: dict = Depends(get_current_user)):
+    return current_user
+
 
 # --------- CATEGORY ROUTES ---------
 @api_router.get("/categories")
 async def get_categories():
     return await db.categories.find({}, {"_id": 0}).to_list(100)
 
+
 # --------- PRODUCT ROUTES ---------
 @api_router.get("/products")
 async def get_products():
     return await db.products.find({}, {"_id": 0}).to_list(1000)
 
+
 # --------- TEST ROUTE ---------
 @api_router.get("/test")
 async def test_api():
     return {"message": "Backend works"}
+
 
 # --------- INCLUDE ROUTER ---------
 app.include_router(api_router)
