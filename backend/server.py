@@ -156,6 +156,7 @@ app.include_router(api_router)
 # --------- GRAPHQL ---------
 #app.add_route("/graphql", GraphQL(schema, debug=True))
 
+
 # --------- TEST ROUTE ---------
 @app.get("/api/test")
 async def test_api():
