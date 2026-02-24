@@ -12,16 +12,24 @@ import logging
 import jwt
 import bcrypt
 import razorpay
+import os
+import uvicorn
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles  # ✅ always import this
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
-# Serve your frontend folder
+
+# Serve frontend build
 app.mount("/", StaticFiles(directory="frontend/build", html=True), name="frontend")
 
+# Example API route
 @app.get("/api/test")
 async def test_api():
-    return{"message": "Backend works"}
+    return {"message": "Backend works"}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # Use Render's PORT or fallback 8000
+    uvicorn.run(app, host="0.0.0.0", port=port)
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
