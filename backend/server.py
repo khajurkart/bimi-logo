@@ -21,7 +21,7 @@ from ariadne.asgi import GraphQL
 from pathlib import Path
 
 # Your GraphQL schema
-from your_schema import schema  # define schema using ariadne
+from schema import schema  # define schema using ariadne
 
 app = FastAPI()
 
