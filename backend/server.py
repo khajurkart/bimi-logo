@@ -15,6 +15,7 @@ import razorpay
 import os
 import uvicorn
 
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from ariadne.asgi import GraphQL
@@ -29,7 +30,9 @@ app = FastAPI()
 @app.get("/api/test")
 async def test_api():
     return {"message": "Backend works"}
-
+@app.get("/")    
+def root():
+    return {"message": "API is running. Use /graphql for GraphQL requests."}
 # GraphQL endpoint
 app.add_route("/graphql", GraphQL(schema, debug=True))
 
@@ -44,6 +47,7 @@ async def catch_all(full_path: str):
         return index_path.read_text()
     return {"error": "index.html not found"}
     
+
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
