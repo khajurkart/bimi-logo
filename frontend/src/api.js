@@ -1,4 +1,4 @@
-const API_BASE = "https://khajurkart.onrender.com/api";
+const API_BASE = "https://your-backend.onrender.com/api";
 
 export async function login(email, password) {
   const res = await fetch(`${API_BASE}/auth/login`, {
