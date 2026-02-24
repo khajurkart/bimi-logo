@@ -1,5 +1,5 @@
 // frontend/src/api.js
-const API_BASE = "https://khajurkart.com/api";  // <-- Replace with your deployed backend URL
+const API_BASE = "https://khajurkart.onrender.com/api";  // <-- Replace with your deployed backend URL
 
 export async function login(email, password) {
   const res = await fetch(`${API_BASE}/auth/login`, {
