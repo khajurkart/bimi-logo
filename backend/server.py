@@ -12,6 +12,12 @@ import logging
 import jwt
 import bcrypt
 import razorpay
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles  # ✅ always import this
+
+app = FastAPI()
+# Serve your frontend folder
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
