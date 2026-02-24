@@ -14,28 +14,38 @@ import bcrypt
 import razorpay
 import os
 import uvicorn
+
+import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pathlib import Path
 
-@app.get("/{full_path:path}")
-async def catch_all(full_path: str):
-    return FileResponse(Path("frontend/build/index.html"))
-
+# 1️⃣ Create FastAPI app
 app = FastAPI()
 
-# Serve frontend build
+# 2️⃣ Serve frontend build folder
 app.mount("/", StaticFiles(directory="frontend/build", html=True), name="frontend")
 
-# Example API route
+# 3️⃣ Example backend API
 @app.get("/api/test")
 async def test_api():
     return {"message": "Backend works"}
 
+# 4️⃣ Catch-all route for React Router
+@app.get("/{full_path:path}")
+async def catch_all(full_path: str):
+    index_path = Path("frontend/build/index.html")
+    if index_path.exists():
+        return FileResponse(index_path)
+    return {"error": "index.html not found"}
+
+# 5️⃣ Run server using Render's PORT environment variable
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))  # Use Render's PORT or fallback 8000
+    port = int(os.environ.get("PORT", 8000))
+    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=port)
+    
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
