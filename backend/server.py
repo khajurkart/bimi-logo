@@ -153,6 +153,7 @@ async def get_products():
 
 # --------- INCLUDE ROUTER ---------
 app.include_router(api_router)
+app.include_router(api_router)
 
 # --------- GRAPHQL ---------
 #app.add_route("/graphql", GraphQL(schema, debug=True))
