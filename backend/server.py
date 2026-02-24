@@ -14,8 +14,8 @@ import jwt
 import bcrypt
 import razorpay
 
-from ariadne.asgi import GraphQL
-from schema import schema  # Your GraphQL schema
+#from ariadne.asgi import GraphQL
+#from schema import schema  # Your GraphQL schema
 
 # --------- ENV & DB ---------
 ROOT_DIR = Path(__file__).parent
@@ -154,7 +154,7 @@ async def get_products():
 app.include_router(api_router)
 
 # --------- GRAPHQL ---------
-app.add_route("/graphql", GraphQL(schema, debug=True))
+#app.add_route("/graphql", GraphQL(schema, debug=True))
 
 # --------- TEST ROUTE ---------
 @app.get("/api/test")
