@@ -15,42 +15,34 @@ import razorpay
 import os
 import uvicorn
 
-import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from ariadne.asgi import GraphQL
 from pathlib import Path
-from starlette.graphql import GraphQLApp  # if using GraphQL (optional)
 
-# 1️⃣ Create FastAPI app
+# Your GraphQL schema
+from your_schema import schema  # define schema using ariadne
+
 app = FastAPI()
 
-# 2️⃣ Example GraphQL endpoint
-# Only if using GraphQL
-# from your_schema import schema
-# app.add_route("/graphql", GraphQLApp(schema=schema))
-
-# 3️⃣ Example REST API
+# REST endpoint example
 @app.get("/api/test")
 async def test_api():
     return {"message": "Backend works"}
 
-# 4️⃣ Serve frontend static files
+# GraphQL endpoint
+app.add_route("/graphql", GraphQL(schema, debug=True))
+
+# Serve frontend
 app.mount("/", StaticFiles(directory="frontend/build", html=True), name="frontend")
 
-# 5️⃣ Catch-all route for React Router (after APIs)
+# Catch-all for React Router
 @app.get("/{full_path:path}")
 async def catch_all(full_path: str):
     index_path = Path("frontend/build/index.html")
     if index_path.exists():
-        return FileResponse(index_path)
+        return index_path.read_text()
     return {"error": "index.html not found"}
-
-# 6️⃣ Use Render's PORT environment variable
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
     
 
 ROOT_DIR = Path(__file__).parent
