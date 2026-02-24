@@ -19,6 +19,10 @@ app = FastAPI()
 # Serve your frontend folder
 app.mount("/", StaticFiles(directory="frontend/build", html=True), name="frontend")
 
+@app.get("/api/test")
+async def test_api():
+    return{"message": "Backend works"}
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
