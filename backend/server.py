@@ -13,6 +13,7 @@ import os
 import jwt
 import bcrypt
 import razorpay
+from fastapi.responses import FileResponse
 
 #from ariadne.asgi import GraphQL
 #from schema import schema  # Your GraphQL schema
@@ -49,7 +50,13 @@ security = HTTPBearer()
 
 # --------- STATIC FILES (React Build) ---------
 app.mount("/static", StaticFiles(directory="frontend/build/static"), name="static")
-app.mount("/", StaticFiles(directory="frontend/build", html=True), name="frontend")
+
+app.mount("/static", StaticFiles(directory="frontend/build/static"), name="static")
+
+@app.get("/")
+async def serve_react():
+    return FileResponse("frontend/build/index.html")
+    
 
 @app.get("/{full_path:path}")
 async def catch_all(full_path: str):
