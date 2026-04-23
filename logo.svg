@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512"
+     xmlns="http://www.w3.org/2000/svg"
+     version="1.2" baseProfile="tiny">
+
+  <!-- Monogram KK -->
+  <text x="50%" y="50%"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        font-family="Georgia, Times, serif"
+        font-size="140"
+        fill="#C9A24A"
+        letter-spacing="12">
+        KK
+  </text>
+
+</svg>
